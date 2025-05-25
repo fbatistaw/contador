@@ -63,11 +63,24 @@
         const localStorageKey = 'progressCounter';
         const maxProgress = 30; // Valor máximo da barra de progresso
 
-        // Tenta carregar o contador do localStorage, caso contrário, inicia em 0
-        let counter = parseInt(localStorage.getItem(localStorageKey) || '0', 10);
+        // Tenta carregar o contador do localStorage
+        let storedCounter = localStorage.getItem(localStorageKey);
+        let counter;
+
+        if (storedCounter !== null && !isNaN(parseInt(storedCounter, 10))) {
+            // Se houver um valor válido no localStorage, usa-o
+            counter = parseInt(storedCounter, 10);
+            console.log(`Contador carregado do localStorage: ${counter}`);
+        } else {
+            // Caso contrário, inicia em 0
+            counter = 0;
+            console.log("Nenhum contador encontrado no localStorage ou valor inválido, iniciando em 0.");
+        }
+
         // Garante que o contador não exceda o máximo permitido ao carregar
         if (counter > maxProgress) {
             counter = maxProgress;
+            console.log(`Contador ajustado para o máximo (${maxProgress}) ao carregar.`);
         }
 
         // Obtém referências aos elementos HTML
@@ -90,6 +103,7 @@
 
             // Salva o contador no localStorage para persistência
             localStorage.setItem(localStorageKey, counter.toString());
+            console.log(`Contador salvo no localStorage: ${counter}`);
 
             // Desabilita o botão se o contador atingir o máximo
             if (counter >= maxProgress) {
